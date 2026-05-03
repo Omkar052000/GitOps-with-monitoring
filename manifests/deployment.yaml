@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: webapp
-        image: amitabhdevops/gitops-webapp:latest
+        image: omkarpathak05/skillpulse-backend:latest
         ports:
         - containerPort: 3000
         resources:
