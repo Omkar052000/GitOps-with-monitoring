@@ -37,8 +37,8 @@ jobs:
       - name: Build and Push to DockerHub
         uses: docker/build-push-action@v5
         with:
-          context: ./GitOps-with-monitoring/app
-          file: ./GitOps-with-monitoring/app/Dockerfile
+          context: ./app
+          file: ./app/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/gitops-webapp:${{ env.SHORT_SHA }}
             
