@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - 'GitOps-with-monitoring/manifests/**'
+      - 'manifests/**'
 
 permissions:
   contents: write
@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
         with:
           persist-credentials: true
           fetch-depth: 0
@@ -33,7 +33,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-
       - name: Build and Push to DockerHub
         uses: docker/build-push-action@v5
         with:
@@ -41,10 +40,14 @@ jobs:
           file: ./app/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/gitops-webapp:${{ env.SHORT_SHA }}
-            
+
       - name: Update Kubernetes Manifest
         run: |
           sed -i "s|image: .*gitops-webapp:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/gitops-webapp:${{ env.SHORT_SHA }}|g" manifests/deployment.yaml
+
+      - name: Verify Manifest Change
+        run: |
+          grep "image:" manifests/deployment.yaml
 
       - name: Configure Git
         run: |
@@ -53,13 +56,10 @@ jobs:
 
       - name: Commit Manifest Changes
         run: |
-          git add GitOps-with-monitoring/manifests/deployment.yaml
-          git diff --staged --quiet || \
-          git commit -m "Update image tag to ${{ env.SHORT_SHA }}"
+          git add manifests/deployment.yaml
+          git diff --staged --quiet || git commit -m "Update image tag to ${{ env.SHORT_SHA }}"
 
       - name: Push Changes
         run: |
+          git pull --rebase origin main
           git push origin main
-    
-
-          
