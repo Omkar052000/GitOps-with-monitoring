@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: webapp
-        image: omkarpathak05/gitops-webapp:9ea5f39
+        image: omkarpathak05/gitops-webapp:0675c75
         ports:
         - containerPort: 3000
         resources:
