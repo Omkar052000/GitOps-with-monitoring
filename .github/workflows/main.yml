@@ -44,7 +44,7 @@ jobs:
             
       - name: Update Kubernetes Manifest
         run: |
-          sed -i "s|image: .*gitops-webapp:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/gitops-webapp:${{ env.SHORT_SHA }}|g" /manifests/deployment.yaml
+          sed -i "s|image: .*gitops-webapp:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/gitops-webapp:${{ env.SHORT_SHA }}|g" manifests/deployment.yaml
 
       - name: Configure Git
         run: |
